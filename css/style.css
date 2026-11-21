@@ -1,0 +1,749 @@
+/* =============================================================================
+   Personal Dashboard — style.css
+   Sections:
+     1. CSS Custom Properties (light theme)
+     2. Dark theme overrides
+     3. Reset & base
+     4. Layout — header, main grid, footer
+     5. Greeting widget (header left)
+     6. Theme toggle button
+     7. Widget cards
+     8. Focus Timer widget
+     9. To-Do widget
+    10. Quick Links widget
+    11. Shared: buttons (.btn)
+    12. Shared: inputs & selects
+    13. Shared: error messages
+    14. Responsive breakpoints
+============================================================================= */
+
+
+/* =============================================================================
+   1. CSS Custom Properties — Light Theme
+============================================================================= */
+:root {
+  /* Backgrounds */
+  --color-bg:           #f5f5f5;
+  --color-surface:      #ffffff;
+  --color-surface-alt:  #f0f4f8;
+
+  /* Text */
+  --color-text-primary:   #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-muted:     #9ca3af;
+
+  /* Accent / interactive */
+  --color-accent:         #3b82f6;
+  --color-accent-hover:   #2563eb;
+  --color-accent-fg:      #ffffff;   /* text on accent backgrounds */
+
+  /* Borders & shadows */
+  --color-border:         #e0e0e0;
+  --color-border-focus:   #3b82f6;
+  --shadow-card:          0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  /* Semantic */
+  --color-error:          #dc2626;
+  --color-error-bg:       #fef2f2;
+  --color-success:        #16a34a;
+  --color-notification-bg: #dbeafe;
+  --color-notification-text: #1d4ed8;
+
+  /* Typography */
+  --font-sans:   system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:   "Courier New", Courier, monospace;
+
+  /* Spacing & shape */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-pill: 999px;
+  --gap-widget:  1.25rem;
+}
+
+
+/* =============================================================================
+   2. Dark Theme Overrides  —  applied when <body class="dark">
+============================================================================= */
+body.dark {
+  --color-bg:           #0f172a;
+  --color-surface:      #1e293b;
+  --color-surface-alt:  #263045;
+
+  --color-text-primary:   #f0f0f0;
+  --color-text-secondary: #9ca3af;
+  --color-text-muted:     #6b7280;
+
+  --color-accent:         #60a5fa;
+  --color-accent-hover:   #93c5fd;
+  --color-accent-fg:      #0f172a;
+
+  --color-border:         #374151;
+  --color-border-focus:   #60a5fa;
+  --shadow-card:          0 1px 4px rgba(0, 0, 0, 0.4), 0 2px 12px rgba(0, 0, 0, 0.3);
+
+  --color-error:          #f87171;
+  --color-error-bg:       #2d1313;
+  --color-success:        #4ade80;
+  --color-notification-bg: #1e3a5f;
+  --color-notification-text: #93c5fd;
+}
+
+
+/* =============================================================================
+   3. Reset & Base
+============================================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Prevent horizontal overflow at every viewport width */
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3 {
+  line-height: 1.2;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input,
+select,
+button {
+  font-size: 0.95rem;
+}
+
+
+/* =============================================================================
+   4. Layout — Header / Main Grid / Footer
+============================================================================= */
+
+/* ── Header ── */
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1rem;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  /* Prevent header content from overflowing narrow viewports */
+  flex-wrap: wrap;
+}
+
+/* ── Main content grid ── */
+.dashboard-main {
+  flex: 1;
+  display: grid;
+  /* 1 column by default; breakpoints add columns */
+  grid-template-columns: 1fr;
+  gap: var(--gap-widget);
+  padding: var(--gap-widget) 1rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Footer ── */
+.dashboard-footer {
+  text-align: center;
+  padding: 0.85rem 1rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+
+/* =============================================================================
+   5. Greeting Widget (header left)
+============================================================================= */
+.greeting-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+/* Large monospace clock */
+.time-display {
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.date-display {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.1rem;
+}
+
+.greeting-text {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-top: 0.25rem;
+}
+
+
+/* =============================================================================
+   6. Theme Toggle Button
+============================================================================= */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  padding: 0.3rem;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  /* Keep it aligned to top in the flex header */
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--color-surface-alt);
+  transform: scale(1.1) rotate(10deg);
+}
+
+.theme-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+
+/* =============================================================================
+   7. Widget Cards
+============================================================================= */
+.widget {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  /* Prevent individual widget from blowing out the grid column */
+  min-width: 0;
+  overflow: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.widget h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+
+/* =============================================================================
+   8. Focus Timer Widget
+============================================================================= */
+
+/* Extra-large countdown */
+.timer-display {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 10vw, 5rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+  text-align: center;
+  line-height: 1;
+}
+
+/* Timer notification — hidden by default via [hidden] attribute;
+   becomes visible when JS removes [hidden] and adds .active */
+.timer-notification {
+  display: none;
+}
+
+.timer-notification:not([hidden]) {
+  display: block;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-notification-bg);
+  color: var(--color-notification-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.timer-notification.active:not([hidden]) {
+  animation: pulse-notification 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-notification {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+/* Timer buttons row */
+.timer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Duration input row */
+.timer-duration-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timer-duration-row label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.timer-duration-row input[type="number"] {
+  width: 5rem;
+  flex-shrink: 0;
+}
+
+
+/* =============================================================================
+   9. To-Do Widget
+============================================================================= */
+.todo-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.todo-input-row input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Sort row */
+.todo-sort-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.todo-sort-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Task list */
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+/* Individual task row */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  /* Prevent long task names from causing overflow */
+  min-width: 0;
+  overflow: hidden;
+}
+
+.todo-name {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* Completed task */
+.todo-item.complete .todo-name {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* Small icon buttons on each todo row */
+.todo-toggle,
+.todo-edit,
+.todo-delete {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.todo-toggle:hover {
+  background-color: var(--color-success);
+  color: #fff;
+  border-color: var(--color-success);
+}
+
+.todo-edit:hover {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
+}
+
+.todo-delete:hover {
+  background-color: var(--color-error);
+  color: #fff;
+  border-color: var(--color-error);
+}
+
+.todo-toggle:focus-visible,
+.todo-edit:focus-visible,
+.todo-delete:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 1px;
+}
+
+
+/* =============================================================================
+   10. Quick Links Widget
+============================================================================= */
+.links-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.links-input-row input {
+  flex: 1;
+  min-width: 8rem;
+}
+
+/* Links grid */
+.links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Each link item: pill-button + delete */
+.link-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* Pill link button */
+.link-btn {
+  background-color: var(--color-surface-alt);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  padding: 0.3rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  max-width: 20ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-btn:hover {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+
+.link-btn:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Delete button beside each link */
+.link-delete {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.3rem;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.link-delete:hover {
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.link-delete:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 1px;
+}
+
+
+/* =============================================================================
+   11. Shared: Buttons (.btn)
+============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  border: 2px solid transparent;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Primary — filled */
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.btn-primary:active {
+  opacity: 0.85;
+}
+
+/* Secondary — ghost / outlined */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+
+.btn-secondary:active {
+  opacity: 0.85;
+}
+
+/* Disabled state for all buttons */
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+/* =============================================================================
+   12. Shared: Inputs & Selects
+============================================================================= */
+input[type="text"],
+input[type="url"],
+input[type="number"],
+select {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.65rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Dark-mode focus ring tweak */
+body.dark input[type="text"]:focus,
+body.dark input[type="url"]:focus,
+body.dark input[type="number"]:focus,
+body.dark select:focus {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Remove number input spinners (optional, keeps layout tidy) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Select arrow — keep default but ensure colour tokens apply */
+select {
+  appearance: auto;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+
+/* =============================================================================
+   13. Shared: Error Messages
+============================================================================= */
+.error-message {
+  font-size: 0.8rem;
+  color: var(--color-error);
+  min-height: 1em;   /* reserve space so layout doesn't jump */
+  margin-top: -0.3rem;
+}
+
+.error-message:empty {
+  /* Still takes up its min-height; content just invisible */
+  visibility: hidden;
+}
+
+
+/* =============================================================================
+   14. Responsive Breakpoints
+============================================================================= */
+
+/* ── 480px — slightly larger small phones ── */
+@media (min-width: 480px) {
+  .dashboard-main {
+    padding: var(--gap-widget) 1.25rem;
+  }
+}
+
+/* ── 640px — tablets (portrait) → 2-column grid ── */
+@media (min-width: 640px) {
+  .dashboard-main {
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--gap-widget) 1.5rem;
+  }
+
+  /* Timer spans full width at this size for the big countdown */
+  .timer-widget {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── 900px — tablets (landscape) → keep 2-col but bigger gaps ── */
+@media (min-width: 900px) {
+  .dashboard-main {
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+  }
+
+  .dashboard-header {
+    padding: 1.5rem 2rem 1.25rem;
+  }
+}
+
+/* ── 1024px — desktops → 3-column grid, timer no longer spans full ── */
+@media (min-width: 1024px) {
+  .dashboard-main {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .timer-widget {
+    grid-column: auto;   /* restore natural placement */
+  }
+}
+
+/* ── 1280px — large desktops ── */
+@media (min-width: 1280px) {
+  .dashboard-main {
+    padding: 1.75rem 2.5rem;
+    gap: 1.75rem;
+  }
+}
+
+/* ── 1600px — wide screens — cap max-width and center ── */
+@media (min-width: 1600px) {
+  .dashboard-main {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ── 2560px — 4K / ultra-wide ── */
+@media (min-width: 2560px) {
+  :root {
+    font-size: 18px;   /* scale up base font so proportions hold */
+  }
+}
+
+/* ── Reduced-motion preference ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
