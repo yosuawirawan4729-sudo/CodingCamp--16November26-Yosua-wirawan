@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script defer src="js/app.js"></script>
+  </head>
+  <body>
+
+    <!-- ================================================================
+         Header — Greeting + Theme Toggle
+    ================================================================ -->
+    <header class="dashboard-header">
+      <div class="greeting-widget">
+        <p id="time-display" class="time-display" aria-live="polite">00:00</p>
+        <p id="date-display" class="date-display"></p>
+        <h1 id="greeting-text" class="greeting-text">Good Morning</h1>
+      </div>
+      <button
+        id="theme-toggle"
+        type="button"
+        class="theme-toggle-btn"
+        aria-label="Switch to dark theme"
+      >🌙</button>
+    </header>
+
+    <!-- ================================================================
+         Main Content
+    ================================================================ -->
+    <main class="dashboard-main">
+
+      <!-- ── Focus Timer ───────────────────────────────────────────── -->
+      <section class="widget timer-widget" aria-labelledby="timer-heading">
+        <h2 id="timer-heading">Focus Timer</h2>
+
+        <p id="timer-display" class="timer-display" aria-live="polite" aria-atomic="true">25:00</p>
+
+        <p
+          id="timer-notification"
+          class="timer-notification"
+          role="alert"
+          hidden
+        ></p>
+
+        <div class="timer-controls">
+          <button id="timer-start"  type="button" class="btn btn-primary">Start</button>
+          <button id="timer-stop"   type="button" class="btn btn-secondary">Pause</button>
+          <button id="timer-reset"  type="button" class="btn btn-secondary">Reset</button>
+        </div>
+
+        <div class="timer-duration-row">
+          <label for="timer-duration-input">Duration (minutes):</label>
+          <input
+            id="timer-duration-input"
+            type="number"
+            min="1"
+            max="120"
+            value="25"
+            aria-label="Timer duration in minutes"
+          />
+          <button id="timer-duration-submit" type="button" class="btn btn-primary">Set</button>
+        </div>
+
+        <p id="timer-error" class="error-message" aria-live="polite"></p>
+      </section>
+
+      <!-- ── To-Do List ────────────────────────────────────────────── -->
+      <section class="widget todo-widget" aria-labelledby="todo-heading">
+        <h2 id="todo-heading">To-Do</h2>
+
+        <div class="todo-input-row">
+          <input
+            id="todo-input"
+            type="text"
+            placeholder="New task…"
+            aria-label="New task name"
+          />
+          <button id="todo-add-btn" type="button" class="btn btn-primary">Add</button>
+        </div>
+
+        <p id="todo-error" class="error-message" aria-live="polite"></p>
+
+        <div class="todo-sort-row">
+          <label for="todo-sort">Sort by:</label>
+          <select id="todo-sort" aria-label="Sort tasks">
+            <option value="incomplete-first">Incomplete first</option>
+            <option value="complete-first">Complete first</option>
+            <option value="alpha-asc">A → Z</option>
+            <option value="alpha-desc">Z → A</option>
+          </select>
+        </div>
+
+        <ul id="todo-list" class="todo-list" aria-label="Task list"></ul>
+      </section>
+
+      <!-- ── Quick Links ───────────────────────────────────────────── -->
+      <section class="widget links-widget" aria-labelledby="links-heading">
+        <h2 id="links-heading">Quick Links</h2>
+
+        <div class="links-input-row">
+          <input
+            id="links-label-input"
+            type="text"
+            placeholder="Label"
+            aria-label="Link label"
+          />
+          <input
+            id="links-url-input"
+            type="url"
+            placeholder="https://example.com"
+            aria-label="Link URL"
+          />
+          <button id="links-add-btn" type="button" class="btn btn-primary">Add</button>
+        </div>
+
+        <p id="links-error" class="error-message" aria-live="polite"></p>
+
+        <div id="links-list" class="links-list" aria-label="Quick links"></div>
+      </section>
+
+    </main>
+
+    <!-- ================================================================
+         Footer
+    ================================================================ -->
+    <footer class="dashboard-footer">
+      <p>Personal Dashboard</p>
+    </footer>
+
+  </body>
+</html>
